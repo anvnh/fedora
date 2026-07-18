@@ -15,6 +15,52 @@ Primary goals:
 
 ---
 
+## Project Structure
+
+### setup.sh
+
+`setup.sh` is the application's entry point.
+
+It MUST follow this structure:
+
+1. Source all libraries.
+2. Source all modules.
+3. Execute each module's public function.
+
+Example:
+
+```bash
+source lib/common.sh
+source lib/check.sh
+source lib/install.sh
+
+source modules/dnf.sh
+source modules/flatpak.sh
+source modules/git.sh
+source modules/gnome.sh
+
+setup_dnf
+setup_flatpak
+setup_git
+setup_gnome
+```
+
+Do NOT interleave sourcing and execution.
+
+Incorrect:
+
+```bash
+source modules/dnf.sh
+setup_dnf
+
+source modules/git.sh
+setup_git
+```
+
+Always load every dependency before executing any setup function.
+
+---
+
 ## Bash Style
 
 - Use `#!/usr/bin/env bash`
