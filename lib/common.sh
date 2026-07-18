@@ -22,5 +22,6 @@ print_error() {
 }
 
 print_skip() {
-    echo -e "${CYAN}[SKIP] $1${NC}"
+    local color="${2:-$CYAN}"
+    echo -e "${color}[SKIP]${NC} $1"
 }
