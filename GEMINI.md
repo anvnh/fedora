@@ -21,6 +21,8 @@ Primary goals:
 - Use `set -euo pipefail`
 - Quote all variables.
 - Prefer functions over duplicated code.
+- Each module should expose one public entry function.
+- Helper functions should remain private to the module.
 - Keep functions small and focused.
 - Avoid unnecessary subshells.
 
@@ -150,21 +152,100 @@ Scripts should:
 
 ## Code Organization
 
-Keep installation logic separated.
+```
+.
+├── lib
+│   ├── common.sh
+│   ├── check.sh
+│   └── install.sh
+│
+├── modules
+│   ├── dnf.sh
+│   ├── flatpak.sh
+│   ├── git.sh
+│   ├── gnome.sh
+│   └── ghostty.sh
+│
+└── setup.sh
+```
+
+### lib/
+
+Contains reusable helper functions only.
+
+Examples:
+
+- `print_info`
+- `print_success`
+- `has_flatpak`
+- `install_flatpak`
+- `install_dnf_group`
+
+### modules/
+
+Each module represents one part of the Fedora setup.
+
+Each module should expose **one public function** named:
+
+```bash
+setup_<module>()
+```
+
+Examples:
+
+```bash
+setup_dnf()
+setup_git()
+setup_gnome()
+setup_ghostty()
+```
+
+Private helper functions should begin with an underscore.
 
 Example:
 
-```
-scripts/
-    common.sh
-    packages.sh
-    development.sh
-    desktop.sh
-    fonts.sh
-    flatpak.sh
+```bash
+_configure_git_identity()
+_configure_git_editor()
 ```
 
-Each file should expose installation functions only.
+---
+
+## Module Design
+
+Each module should:
+
+- Expose one public `setup_<module>()` function.
+- Use helper functions from `lib/`.
+- Keep implementation details inside the module.
+- Avoid executing code when sourced.
+
+Example:
+
+```bash
+setup_git() {
+    _configure_identity
+    _configure_editor
+}
+```
+
+Do not execute setup logic immediately when the module is sourced.
+
+---
+
+## Public API
+
+Only these functions should be called from `setup.sh`:
+
+```bash
+setup_dnf
+setup_flatpak
+setup_git
+setup_gnome
+...
+```
+
+All other functions are considered internal to their module and should not be called outside that file.
 
 ---
 
@@ -180,11 +261,10 @@ If an installation fails:
 
 ## What Gemini Should Do
 
-When generating new installation functions:
+When generating new modules:
 
-- Follow the standard installation workflow.
-- Reuse existing helper functions.
-- Never duplicate output formatting.
-- Always check whether software is already installed.
-- Prefer reusable helper functions over repeated logic.
-- Match the style of the existing project.
+- Expose exactly one public `setup_<module>()` function.
+- Use existing helper functions from `lib/`.
+- Create private helper functions only when needed.
+- Avoid duplicating installation logic.
+- Keep modules focused on a single responsibility.

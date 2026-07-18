@@ -13,3 +13,17 @@ install_flatpak() {
     flatpak install -y flathub "$app_id"
     print_success "$app_name installed"
 }
+
+install_dnf() {
+    local group_name="$1"
+    shift
+
+    if rpm -q "$@" >/dev/null 2>&1; then
+        print_installed "$group_name"
+        return
+    fi
+
+    print_info "Installing $group_name..."
+    sudo dnf5 install -y "$@"
+    print_success "$group_name installed"
+}

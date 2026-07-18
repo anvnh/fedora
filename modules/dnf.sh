@@ -17,13 +17,7 @@ print_success "DNF configuration updated"
 print_info "Update system packages..."
 # sudo dnf update -y
 
-if rpm -q "${PACKAGES[@]}" >/dev/null 2>&1; then
-    print_installed "Utility packages"
-else
-    print_info "Installing utility packages..."
-    sudo dnf5 install -y "${PACKAGES[@]}"
-    print_success "Utility packages installed"
-fi
+install_dnf "Essentials Packages" "${PACKAGES[@]}"
 
 install_flatpak "Extension Manager" "com.mattjakeman.ExtensionManager"
 install_flatpak "Super Productivity" "com.super_productivity.SuperProductivity"
