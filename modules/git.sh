@@ -4,7 +4,7 @@ _configure_git_credentials() {
     current_email=$(git config --global user.email || true)
 
     if [[ -n "$current_name" && -n "$current_email" ]]; then
-        print_installed "Git identity ($current_name <$current_email>)"
+        print_skip "Git identity ($current_name <$current_email>)"
         return
     fi
 
@@ -21,7 +21,7 @@ _configure_git_credentials() {
     git config --global user.name "$git_name"
     git config --global user.email "$git_email"
 
-    print_success "Git configured"
+    print_success "Git configured successfully as: $git_name <$git_email>"
 }
 
 setup_git() {

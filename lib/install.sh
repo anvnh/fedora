@@ -5,7 +5,7 @@ install_flatpak() {
     local app_id="$2"
 
     if flatpak info "$app_id" >/dev/null 2>&1; then
-        print_installed "$app_name"
+        print_skip "$app_name"
         return
     fi
 
@@ -19,7 +19,7 @@ install_dnf() {
     shift
 
     if rpm -q "$@" >/dev/null 2>&1; then
-        print_installed "$group_name"
+        print_skip "$group_name"
         return
     fi
 

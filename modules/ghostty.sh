@@ -2,7 +2,7 @@
 
 setup_ghostty() {
     if command -v ghostty >/dev/null 2>&1; then
-        print_installed "Ghostty"
+        print_skip "Ghostty"
     else
         print_info "Installing Ghostty from COPR..."
 
@@ -17,7 +17,7 @@ setup_ghostty() {
 
     if [[ "$CURRENT_BINDINGS" == *"$KEYBINDING_PATH"* ]] && \
        [ "$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$KEYBINDING_PATH" binding)" == "'<Super>Return'" ]; then
-        print_installed "Ghostty keyboard shortcut"
+        print_skip "Ghostty keyboard shortcut"
     else
         print_info "Configuring Ghostty keyboard shortcut..."
         

@@ -1,10 +1,13 @@
 #!/bin/bash
 
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+RED="\033[1;91m"
+GREEN="\033[1;92m"
+YELLOW="\033[1;93m"
+BLUE="\033[1;94m"
+MAGENTA="\033[1;95m"
+CYAN="\033[1;96m"
+WHITE="\033[1;97m"
+NC="\033[0m"
 
 print_success() {
     echo -e "${GREEN}[SUCCESS] $1${NC}"
@@ -18,6 +21,6 @@ print_error() {
     echo -e "${RED}[ERROR] $1${NC}"
 }
 
-print_installed() {
+print_skip() {
     echo -e "${CYAN}[SKIP] $1${NC}"
 }

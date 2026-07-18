@@ -1,7 +1,7 @@
 #!/bin/bash
 setup_gnome() {
     if [ "$(gsettings get org.gnome.desktop.input-sources xkb-options)" = "['ctrl:nocaps']" ]; then
-        print_installed "Caps Lock to Ctrl remapping"
+        print_skip "Caps Lock to Ctrl remapping"
     else
         print_info "Remapping Caps Lock to Ctrl..."
         gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
@@ -15,7 +15,7 @@ setup_gnome() {
     fi
 
     if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-dark'" ]; then
-        print_installed "GNOME Dark Mode"
+        print_skip "GNOME Dark Mode"
     else
         print_info "Setting GNOME theme to Dark Mode..."
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'

@@ -86,7 +86,7 @@ Every installation function MUST follow this workflow:
    - Call:
 
 ```bash
-print_installed "<package>"
+print_skip "<package>"
 ```
 
 3. If not installed:
@@ -109,7 +109,7 @@ Example:
 ```bash
 install_git() {
     if command -v git >/dev/null 2>&1; then
-        print_installed "Git"
+        print_skip "Git"
         return
     fi
 
@@ -130,7 +130,7 @@ Never install a package without checking first.
 Always use these helper functions.
 
 ```bash
-print_installed() {
+print_skip() {
     echo -e "${CYAN}[SKIP] $1${NC}"
 }
 
