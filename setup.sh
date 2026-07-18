@@ -4,8 +4,8 @@ set -euo pipefail
 # Get the directory of the current script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Source utility functions
-source "$SCRIPT_DIR/modules/utils.sh"
+source "$SCRIPT_DIR/lib/common.sh"
+source "$SCRIPT_DIR/lib/install.sh"
 
 # Run modules
 source "$SCRIPT_DIR/modules/dnf.sh"

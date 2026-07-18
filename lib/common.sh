@@ -1,5 +1,4 @@
 #!/bin/bash
-# utils.sh: Helper functions and variables
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
