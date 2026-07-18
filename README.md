@@ -1,3 +1,5 @@
+>[!warning] This scripts is only for **GNOME** DE on Fedora.
+
 # For testing purposes:
 
 1. Allow port 8000 in the firewall:

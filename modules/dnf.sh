@@ -15,14 +15,19 @@ print_info "Installing utility packages..."
 sudo dnf install wl-clipboard libgda libgda-sqlite gsound -y
 print_success "Utility packages installed"
 
-print_info "Install extension manager..."
-flatpak install flathub com.mattjakeman.ExtensionManager -y
-print_success "Extension manager installed"
+if flatpak info com.mattjakeman.ExtensionManager >/dev/null 2>&1; then
+    print_installed "Extension Manager"
+else
+    print_info "Install extension manager..."
+    flatpak install -y flathub com.mattjakeman.ExtensionManager
+    print_success "Extension manager installed"
+fi
 
-if rpm -qa | grep -iqE 'super-?productivity'; then
+PACKAGE_SUPERPRODUCTIVITY="com.super_productivity.SuperProductivity"
+if flatpak info  $PACKAGE_SUPERPRODUCTIVITY >/dev/null 2>&1; then
     print_installed "Super Productivity"
 else
     print_info "Installing Super Productivity..."
-    sudo dnf install -y https://github.com/johannesjo/super-productivity/releases/latest/download/superProductivity-x86_64.rpm
+    flatpak install -y flathub $PACKAGE_SUPERPRODUCTIVITY
     print_success "Super Productivity installed"
 fi

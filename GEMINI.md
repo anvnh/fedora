@@ -28,6 +28,8 @@ Primary goals:
 
 ## Installation Rules
 
+NEVER, NEVER, NEVER run directly script on the host machine. The developer will test the script on a virtual machine, any errors or requests will be send back to you via chat.
+
 Every installation function MUST follow this workflow:
 
 1. Check whether the package/application is already installed.
