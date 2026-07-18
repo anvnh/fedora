@@ -6,6 +6,7 @@ setup_dnf() {
         libgda
         libgda-sqlite
         gsound
+        nvim
     )
 
     print_info "Maximize DNF download speed and force IPv4 routing..."
