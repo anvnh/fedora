@@ -1,3 +1,4 @@
+#!/bin/bash
 _configure_git_credentials() {
     local current_name current_email
     current_name=$(git config --global user.name || true)

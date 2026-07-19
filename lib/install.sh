@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 install_flatpak() {
     local app_name="$1"

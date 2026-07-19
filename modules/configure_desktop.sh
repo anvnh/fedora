@@ -62,7 +62,7 @@ setup_configure_desktop() {
     else
         print_info "Configuring GNOME desktop preferences..."
 
-        gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']" || { print_error "Failed to map Caps Lock to Ctrl"; exit 1; }
+        gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']" || print_error "Failed to map Caps Lock to Ctrl"
         gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || print_error "Failed to set Dark Mode"
         gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true || print_error "Failed to enable primary paste"
         gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' || print_error "Failed to enable window buttons"

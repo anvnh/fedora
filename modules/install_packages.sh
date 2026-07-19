@@ -46,6 +46,7 @@ setup_install_packages() {
     fi
 
     print_info "Update system packages..."
+    # skipped to avoid long install times"
     # sudo dnf update -y
 
     install_dnf "Essentials Packages" "${PACKAGES[@]}"

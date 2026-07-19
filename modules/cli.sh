@@ -39,7 +39,7 @@ _install_ghostty() {
 }
 
 _configure_tmux() {
-    local src="configs/.tmux.conf"
+    local src="$SCRIPT_DIR/configs/.tmux.conf"
     local dst="$HOME/.config/tmux/tmux.conf"
 
     if cmp -s "$src" "$dst" 2>/dev/null; then
