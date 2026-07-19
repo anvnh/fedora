@@ -47,7 +47,7 @@ _configure_dash_to_dock() {
     print_success "Dash to Dock configured."
 }
 
-setup_gnome() {
+setup_configure_desktop() {
     if [ "$(gsettings get org.gnome.desktop.input-sources xkb-options)" = "['ctrl:nocaps']" ]; then
         print_skip "Caps Lock to Ctrl remapping"
     else

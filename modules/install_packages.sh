@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setup_dnf() {
+setup_install_packages() {
     local PACKAGES=(
         wl-clipboard
         libgda

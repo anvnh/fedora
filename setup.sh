@@ -20,9 +20,9 @@ for file in "$SCRIPT_DIR/modules/"*.sh; do
     [[ -f "$file" ]] && source "$file"
 done
 
-setup_dnf
+setup_install_packages
 setup_git
-setup_gnome
+setup_configure_desktop
 setup_ghostty
 setup_tmux
 
