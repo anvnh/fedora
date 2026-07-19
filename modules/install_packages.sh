@@ -52,4 +52,5 @@ setup_install_packages() {
 
     install_flatpak "Extension Manager" "com.mattjakeman.ExtensionManager"
     install_flatpak "Super Productivity" "com.super_productivity.SuperProductivity"
+    install_flatpak "Actual Budget" "com.actualbudget.actual"
 }

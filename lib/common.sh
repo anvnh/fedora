@@ -45,7 +45,7 @@ request_reboot_and_resume() {
 [Desktop Entry]
 Type=Application
 Name=Resume Fedora Setup
-Exec=ptyxis -- bash -c '"$1"; echo; read -p "Press Enter to close this window..."' _ "$script_path"
+Exec=ptyxis -- bash -c '"$1"; exec bash' _ "$script_path"
 Hidden=false
 X-GNOME-Autostart-enabled=true
 EOF
