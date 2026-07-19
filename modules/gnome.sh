@@ -21,53 +21,30 @@ _configure_dash_to_dock() {
         return
     fi
 
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dock-position)" = "'BOTTOM'" ]; then
-        print_skip "Dash to Dock position"
-    else
-        print_info "Setting Dash to Dock position to BOTTOM..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-        print_success "Dash to Dock position configured."
+    local needs_update=false
+    
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dock-position 2>/dev/null)" != "'BOTTOM'" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dock-fixed 2>/dev/null)" != "true" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock click-action 2>/dev/null)" != "'minimize'" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock extend-height 2>/dev/null)" != "false" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock apply-custom-theme 2>/dev/null)" != "true" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 2>/dev/null)" != "32" ]] && needs_update=true
+
+    if [[ "$needs_update" == false ]]; then
+        print_skip "Dash to Dock configuration"
+        return
     fi
 
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dock-fixed)" = "true" ]; then
-        print_skip "Dash to Dock fixed mode"
-    else
-        print_info "Setting Dash to Dock to fixed mode (no auto-hide)..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true
-        print_success "Dash to Dock fixed mode configured."
-    fi
-
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock click-action)" = "'minimize'" ]; then
-        print_skip "Dash to Dock click-action"
-    else
-        print_info "Setting Dash to Dock click action to minimize..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
-        print_success "Dash to Dock click-action configured."
-    fi
-
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock extend-height)" = "false" ]; then
-        print_skip "Dash to Dock shrink"
-    else
-        print_info "Shrinking Dash to Dock (disabling extend-height)..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
-        print_success "Dash to Dock shrink configured."
-    fi
-
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock apply-custom-theme)" = "true" ]; then
-        print_skip "Dash to Dock built-in theme"
-    else
-        print_info "Enabling Dash to Dock built-in theme..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true
-        print_success "Dash to Dock built-in theme enabled."
-    fi
-
-    if [ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dash-max-icon-size)" = "32" ]; then
-        print_skip "Dash to Dock icon size"
-    else
-        print_info "Setting Dash to Dock icon size limit to 32..."
-        gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 32
-        print_success "Dash to Dock icon size limit configured."
-    fi
+    print_info "Configuring Dash to Dock..."
+    
+    gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM' || print_error "Failed to set dock-position to BOTTOM"
+    gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true || print_error "Failed to set dock-fixed to true"
+    gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize' || print_error "Failed to set click-action to minimize"
+    gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false || print_error "Failed to set extend-height to false"
+    gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true || print_error "Failed to set apply-custom-theme to true"
+    gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 32 || print_error "Failed to set dash-max-icon-size to 32"
+    
+    print_success "Dash to Dock configured."
 }
 
 setup_gnome() {
