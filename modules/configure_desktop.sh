@@ -48,44 +48,28 @@ _configure_dash_to_dock() {
 }
 
 setup_configure_desktop() {
-    if [ "$(gsettings get org.gnome.desktop.input-sources xkb-options)" = "['ctrl:nocaps']" ]; then
-        print_skip "Caps Lock to Ctrl remapping"
+    local needs_update=false
+
+    [[ "$(gsettings get org.gnome.desktop.input-sources xkb-options 2>/dev/null)" != "['ctrl:nocaps']" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.interface color-scheme 2>/dev/null)" != "'prefer-dark'" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.interface gtk-enable-primary-paste 2>/dev/null)" != "true" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.preferences button-layout 2>/dev/null)" != "'appmenu:minimize,maximize,close'" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.keybindings show-screenshot-ui 2>/dev/null)" != "['<Shift><Super>s']" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings toggle-maximized 2>/dev/null)" != "['<Alt>Return']" ]] && needs_update=true
+
+    if [[ "$needs_update" == false ]]; then
+        print_skip "GNOME desktop preferences"
     else
-        print_info "Remapping Caps Lock to Ctrl..."
-        gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
+        print_info "Configuring GNOME desktop preferences..."
 
-        if [ "$(gsettings get org.gnome.desktop.input-sources xkb-options)" = "['ctrl:nocaps']" ]; then
-            print_success "Caps Lock mapped to Ctrl."
-        else
-            echo -e "${RED}[ERROR] Failed to map Caps Lock. State verification failed.${NC}"
-            exit 1
-        fi
-    fi
+        gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']" || { print_error "Failed to map Caps Lock to Ctrl"; exit 1; }
+        gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' || print_error "Failed to set Dark Mode"
+        gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true || print_error "Failed to enable primary paste"
+        gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' || print_error "Failed to enable window buttons"
+        gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>s']" || print_error "Failed to configure screenshot shortcut"
+        gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>Return']" || print_error "Failed to configure maximize shortcut"
 
-    if [ "$(gsettings get org.gnome.desktop.interface color-scheme)" = "'prefer-dark'" ]; then
-        print_skip "GNOME Dark Mode"
-    else
-        print_info "Setting GNOME theme to Dark Mode..."
-        gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-        print_success "GNOME Dark Mode enabled."
-    fi
-
-    gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true
-
-    if [ "$(gsettings get org.gnome.shell.keybindings show-screenshot-ui)" = "['<Shift><Super>s']" ]; then
-        print_skip "GNOME Screenshot shortcut"
-    else
-        print_info "Setting GNOME Screenshot shortcut to Super+Shift+S..."
-        gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>s']"
-        print_success "GNOME Screenshot shortcut configured."
-    fi
-
-    if [ "$(gsettings get org.gnome.desktop.wm.keybindings toggle-maximized)" = "['<Alt>Return']" ]; then
-        print_skip "GNOME Maximize shortcut"
-    else
-        print_info "Setting GNOME Maximize shortcut to Alt+Enter..."
-        gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>Return']"
-        print_success "GNOME Maximize shortcut configured."
+        print_success "GNOME desktop preferences configured."
     fi
 
     if _install_dash_to_dock; then
