@@ -23,4 +23,20 @@ setup_gnome() {
     fi
 
     gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true
+
+    if [ "$(gsettings get org.gnome.shell.keybindings show-screenshot-ui)" = "['<Shift><Super>s']" ]; then
+        print_skip "GNOME Screenshot shortcut"
+    else
+        print_info "Setting GNOME Screenshot shortcut to Super+Shift+S..."
+        gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>s']"
+        print_success "GNOME Screenshot shortcut configured."
+    fi
+
+    if [ "$(gsettings get org.gnome.desktop.wm.keybindings toggle-maximized)" = "['<Alt>Return']" ]; then
+        print_skip "GNOME Maximize shortcut"
+    else
+        print_info "Setting GNOME Maximize shortcut to Alt+Enter..."
+        gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>Return']"
+        print_success "GNOME Maximize shortcut configured."
+    fi
 }
