@@ -17,6 +17,10 @@ print_info() {
     echo -e "${YELLOW}[INFO] $1${NC}"
 }
 
+print_warning() {
+    echo -e "${MAGENTA}[WARNING] $1${NC}"
+}
+
 print_error() {
     echo -e "${RED}[ERROR] $1${NC}"
 }
