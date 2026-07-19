@@ -23,7 +23,6 @@ done
 setup_install_packages
 setup_git
 setup_configure_desktop
-setup_ghostty
-setup_tmux
+setup_cli
 
 print_success "All setup modules completed successfully."

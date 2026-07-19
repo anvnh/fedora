@@ -37,6 +37,14 @@ setup_install_packages() {
         request_reboot_and_resume "$SCRIPT_DIR/setup.sh"
     fi
 
+    if fedora-third-party query | grep -q 'enabled'; then
+        print_skip "Third-party repositories"
+    else
+        print_info "Enabling third-party repositories..."
+        sudo fedora-third-party enable
+        print_success "Third-party repositories enabled."
+    fi
+
     print_info "Update system packages..."
     # sudo dnf update -y
 

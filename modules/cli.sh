@@ -1,6 +1,6 @@
 #!/bin/bash
 
-setup_ghostty() {
+_install_ghostty() {
     if command -v ghostty >/dev/null 2>&1; then
         print_skip "Ghostty"
     else
@@ -36,4 +36,28 @@ setup_ghostty() {
 
         print_success "Ghostty keyboard shortcut configured."
     fi
+}
+
+_configure_tmux() {
+    local src="configs/.tmux.conf"
+    local dst="$HOME/.config/tmux/tmux.conf"
+
+    if cmp -s "$src" "$dst" 2>/dev/null; then
+        print_skip "tmux configuration is up to date"
+        return
+    fi
+
+    print_info "Installing tmux configuration..."
+
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
+
+    print_success "tmux configuration installed"
+}
+
+setup_cli() {
+    _install_ghostty
+    
+    install_dnf "tmux" tmux
+    _configure_tmux
 }
