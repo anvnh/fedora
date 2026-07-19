@@ -9,12 +9,33 @@ setup_dnf() {
         nvim
     )
 
-    print_info "Maximize DNF download speed and force IPv4 routing..."
-    grep -qxF 'max_parallel_downloads=10' /etc/dnf/dnf.conf || echo 'max_parallel_downloads=10' | sudo tee -a /etc/dnf/dnf.conf
-    grep -qxF 'fastestmirror=True' /etc/dnf/dnf.conf || echo 'fastestmirror=True' | sudo tee -a /etc/dnf/dnf.conf
-    grep -qxF 'defaultyes=True' /etc/dnf/dnf.conf || echo 'defaultyes=True' | sudo tee -a /etc/dnf/dnf.conf
-    grep -qxF 'ip_resolve=4' /etc/dnf/dnf.conf || echo 'ip_resolve=4' | sudo tee -a /etc/dnf/dnf.conf
-    print_success "DNF configuration updated"
+    local dnf_conf="/etc/dnf/dnf.conf"
+    local dnf_opts=(
+        "max_parallel_downloads=10"
+        "fastestmirror=True"
+        "defaultyes=True"
+        "ip_resolve=4"
+    )
+    
+    local needs_update=false
+    for opt in "${dnf_opts[@]}"; do
+        if ! grep -qxF "$opt" "$dnf_conf"; then
+            needs_update=true
+            break
+        fi
+    done
+
+    if [[ "$needs_update" == false ]]; then
+        print_skip "DNF configuration"
+    else
+        print_info "Maximize DNF download speed and force IPv4 routing..."
+        for opt in "${dnf_opts[@]}"; do
+            grep -qxF "$opt" "$dnf_conf" || echo "$opt" | sudo tee -a "$dnf_conf" >/dev/null
+        done
+        print_success "DNF configuration updated"
+        
+        request_reboot_and_resume "$SCRIPT_DIR/setup.sh"
+    fi
 
     print_info "Update system packages..."
     # sudo dnf update -y

@@ -29,3 +29,28 @@ print_skip() {
     local color="${2:-$CYAN}"
     echo -e "${color}[SKIP]${NC} $1"
 }
+
+request_reboot_and_resume() {
+    local script_path="$1"
+    
+    print_warning "System requires a reboot to continue."
+    print_info "Setting up auto-resume mechanism..."
+    
+    local autostart_dir="$HOME/.config/autostart"
+    mkdir -p "$autostart_dir"
+    
+    local desktop_file="$autostart_dir/resume-setup-fedora.desktop"
+    
+    cat <<EOF > "$desktop_file"
+[Desktop Entry]
+Type=Application
+Name=Resume Fedora Setup
+Exec=ptyxis -- bash -c '"$1"; echo; read -p "Press Enter to close this window..."' _ "$script_path"
+Hidden=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+    print_warning "Rebooting in 5 seconds... Press Ctrl+C to abort."
+    sleep 5
+    sudo reboot
+}
