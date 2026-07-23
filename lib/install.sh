@@ -27,3 +27,19 @@ install_dnf() {
     sudo dnf5 install -y "$@"
     print_success "$group_name installed"
 }
+
+link_config() {
+    local label="$1"
+    local src="$2"
+    local dst="$3"
+
+    if [[ -L "$dst" && "$(readlink -f "$dst")" == "$(readlink -f "$src")" ]]; then
+        print_skip "$label configuration is up to date"
+        return
+    fi
+
+    print_info "Linking $label configuration..."
+    mkdir -p "$(dirname "$dst")"
+    ln -sf "$src" "$dst"
+    print_success "$label configuration linked"
+}

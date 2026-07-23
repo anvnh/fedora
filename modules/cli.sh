@@ -38,26 +38,9 @@ _install_ghostty() {
     fi
 }
 
-_configure_tmux() {
-    local src="$SCRIPT_DIR/configs/.tmux.conf"
-    local dst="$HOME/.config/tmux/tmux.conf"
-
-    if [[ -L "$dst" && "$(readlink -f "$dst")" == "$(readlink -f "$src")" ]]; then
-        print_skip "tmux configuration is up to date"
-        return
-    fi
-
-    print_info "Linking tmux configuration..."
-
-    mkdir -p "$(dirname "$dst")"
-    ln -sf "$src" "$dst"
-
-    print_success "tmux configuration linked"
-}
-
 setup_cli() {
     _install_ghostty
     
     install_dnf "tmux" tmux
-    _configure_tmux
+    link_config "tmux" "$SCRIPT_DIR/configs/.tmux.conf" "$HOME/.config/tmux/tmux.conf"
 }
