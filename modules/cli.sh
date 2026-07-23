@@ -42,17 +42,17 @@ _configure_tmux() {
     local src="$SCRIPT_DIR/configs/.tmux.conf"
     local dst="$HOME/.config/tmux/tmux.conf"
 
-    if cmp -s "$src" "$dst" 2>/dev/null; then
+    if [[ -L "$dst" && "$(readlink -f "$dst")" == "$(readlink -f "$src")" ]]; then
         print_skip "tmux configuration is up to date"
         return
     fi
 
-    print_info "Installing tmux configuration..."
+    print_info "Linking tmux configuration..."
 
     mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
+    ln -sf "$src" "$dst"
 
-    print_success "tmux configuration installed"
+    print_success "tmux configuration linked"
 }
 
 setup_cli() {
