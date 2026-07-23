@@ -7,6 +7,12 @@ setup_install_packages() {
         libgda-sqlite
         gsound
         nvim
+
+        # CLIs
+        eza
+        zoxide
+        zsh-syntax-highlighting
+        zsh-autosuggestions
     )
 
     local dnf_conf="/etc/dnf/dnf.conf"
