@@ -9,7 +9,7 @@ _install_dash_to_dock() {
         sudo dnf5 install -y gnome-shell-extension-dash-to-dock || exit 1
         
         print_warning "Dash to Dock installed. GNOME requires a reboot to register the extension."
-        print_warning "Please reboot your system and run this script again to enable and configure it."
+        # print_warning "Please reboot your system and run this script again to enable and configure it."
         return 1
     fi
 }
