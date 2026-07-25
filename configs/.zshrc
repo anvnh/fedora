@@ -12,6 +12,17 @@ source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# ================= History ================= #
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+
+# History options
+setopt HIST_IGNORE_DUPS       # Do not record duplicate commands right after each other
+setopt HIST_IGNORE_ALL_DUPS   # Remove old duplicate entries if a new one is saved
+setopt HIST_IGNORE_SPACE      # Do not record commands that start with a space
+setopt SHARE_HISTORY          # Share history across all active zsh sessions
+
 # ================= Aliases ================= #
 # System
 alias sn="shutdown now"

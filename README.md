@@ -10,6 +10,10 @@ sudo firewall-cmd --zone=libvirt --add-port=8000/tcp
 ```
 python3 -m http.server 8000
 ```
+3. Fast
+```
+sudo fuser -k 8000/tcp; sudo firewall-cmd --zone=libvirt --add-port=8000/tcp && python3 -m http.server 8000
+```
 
 >[!NOTE]
 > Must be run at the directory where `setup.sh` is located.
