@@ -16,6 +16,8 @@ source "$HOME/.powerlevel10k/powerlevel10k.zsh-theme"
 # System
 alias sn="shutdown now"
 alias rb="reboot"
+alias sys-update="sudo dnf upgrade --refresh -y && flatpak update -y"
+alias sys-clean="sudo dnf autoremove -y && sudo dnf clean all && flatpak remove --unused -y && journalctl --vacuum-size=100M"
 alias ls="eza --color=always --long --git --no-filesize --icons=always"
 alias cd="z"
 alias ..="cd .."
