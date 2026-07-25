@@ -56,6 +56,7 @@ setup_configure_desktop() {
     [[ "$(gsettings get org.gnome.desktop.wm.preferences button-layout 2>/dev/null)" != "'appmenu:minimize,maximize,close'" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.shell.keybindings show-screenshot-ui 2>/dev/null)" != "['<Shift><Super>s']" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.desktop.wm.keybindings toggle-maximized 2>/dev/null)" != "['<Alt>Return']" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings close 2>/dev/null)" != "['<Super>q']" ]] && needs_update=true
 
     if [[ "$needs_update" == false ]]; then
         print_skip "GNOME desktop preferences"
@@ -68,6 +69,7 @@ setup_configure_desktop() {
         gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' || print_error "Failed to enable window buttons"
         gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>s']" || print_error "Failed to configure screenshot shortcut"
         gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>Return']" || print_error "Failed to configure maximize shortcut"
+        gsettings set org.gnome.desktop.wm.keybindings close "['<Super>q']" || print_error "Failed to configure close window shortcut"
 
         print_success "GNOME desktop preferences configured."
     fi
