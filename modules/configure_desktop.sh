@@ -29,6 +29,8 @@ _configure_dash_to_dock() {
     [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock extend-height 2>/dev/null)" != "false" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock apply-custom-theme 2>/dev/null)" != "true" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 2>/dev/null)" != "32" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock hot-keys 2>/dev/null)" != "false" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.shell.extensions.dash-to-dock shortcut 2>/dev/null)" != "@as []" ]] && needs_update=true
 
     if [[ "$needs_update" == false ]]; then
         print_skip "Dash to Dock configuration"
@@ -43,6 +45,8 @@ _configure_dash_to_dock() {
     gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false || print_error "Failed to set extend-height to false"
     gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true || print_error "Failed to set apply-custom-theme to true"
     gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 32 || print_error "Failed to set dash-max-icon-size to 32"
+    gsettings set org.gnome.shell.extensions.dash-to-dock hot-keys false || print_error "Failed to disable hot-keys"
+    gsettings set org.gnome.shell.extensions.dash-to-dock shortcut '[]' || print_error "Failed to disable Dash to Dock shortcut"
     
     print_success "Dash to Dock configured."
 }
