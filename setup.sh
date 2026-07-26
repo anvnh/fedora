@@ -25,5 +25,6 @@ setup_fonts
 setup_git
 setup_configure_desktop
 setup_cli
+setup_fcitx5
 
 print_success "All setup modules completed successfully."

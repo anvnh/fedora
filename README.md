@@ -23,3 +23,10 @@ sudo fuser -k 8000/tcp; sudo firewall-cmd --zone=libvirt --add-port=8000/tcp && 
 ```
 wget -r -np -nH -R "index.html*" http://192.168.122.1:8000/ && chmod +x ./setup.sh && ./setup.sh
 ```
+
+## Test Fcitx5
+
+```
+sudo dnf remove -y fcitx5 fcitx5-unikey fcitx5-gtk fcitx5-qt && \
+rm -rf ~/.config/fcitx5 ~/.config/environment.d/fcitx5.conf ~/.config/imsettings/xinputrc ~/.config/autostart/org.fcitx.Fcitx5.desktop ~/.config/autostart/resume-setup-fedora.desktop
+```

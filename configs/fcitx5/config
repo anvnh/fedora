@@ -1,0 +1,18 @@
+[Hotkey]
+# Enumerate Input Method Forward
+EnumerateForward=
+# Enumerate Input Method Backward
+EnumerateBackward=
+# Skip first input method when enumerating
+EnumerateSkipFirst=False
+
+[Hotkey/TriggerKeys]
+0=Control+Shift_L
+
+[Hotkey/AltTriggerKeys]
+
+[Hotkey/PrevPage]
+
+[Hotkey/NextPage]
+
+[Hotkey/SuperVK]

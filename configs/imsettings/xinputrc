@@ -1,0 +1,3 @@
+XIM=fcitx5
+XIM_PROGRAM=/usr/bin/fcitx5
+SHORT_DESC="Fcitx5"

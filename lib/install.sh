@@ -24,7 +24,7 @@ install_dnf() {
     fi
 
     print_info "Installing $group_name..."
-    sudo dnf5 install -y "$@"
+    sudo dnf install -y "$@"
     print_success "$group_name installed"
 }
 

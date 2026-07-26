@@ -6,7 +6,7 @@ _install_dash_to_dock() {
         return 0
     else
         print_info "Installing Dash to Dock extension..."
-        sudo dnf5 install -y gnome-shell-extension-dash-to-dock || exit 1
+        sudo dnf install -y gnome-shell-extension-dash-to-dock || exit 1
         
         print_warning "Dash to Dock installed. GNOME requires a reboot to register the extension."
         # print_warning "Please reboot your system and run this script again to enable and configure it."
@@ -78,5 +78,10 @@ setup_configure_desktop() {
         _configure_dash_to_dock
     else
         print_info "Skipping Dash to Dock configuration until system is rebooted."
+    fi
+
+    if rpm -q gnome-shell-extension-kimpanel >/dev/null 2>&1; then
+        gnome-extensions enable kimpanel@krajniak.info >/dev/null 2>&1 || true
+        print_success "Kimpanel GNOME Shell extension enabled."
     fi
 }

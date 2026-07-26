@@ -8,6 +8,11 @@ setup_install_packages() {
         gsound
         nvim
 
+        # Input method
+        fcitx5
+        fcitx5-unikey
+        fcitx5-gtk
+        fcitx5-qt
         # CLIs
         eza
         zoxide
