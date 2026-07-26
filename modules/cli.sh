@@ -78,6 +78,7 @@ setup_cli() {
     
     install_dnf "tmux" tmux
     link_config "tmux" "$SCRIPT_DIR/configs/.tmux.conf" "$HOME/.config/tmux/tmux.conf"
+    link_config "WakaTime" "$SCRIPT_DIR/configs/.wakatime.cfg" "$HOME/.wakatime.cfg"
 
     _install_zsh
 }
