@@ -52,5 +52,5 @@ EOF
 
     print_warning "Rebooting in 5 seconds... Press Ctrl+C to abort."
     sleep 5
-    sudo reboot
+    sudo systemctl reboot -i
 }

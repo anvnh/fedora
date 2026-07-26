@@ -26,5 +26,6 @@ setup_git
 setup_configure_desktop
 setup_cli
 setup_fcitx5
+setup_ide
 
 print_success "All setup modules completed successfully."
