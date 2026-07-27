@@ -61,6 +61,10 @@ setup_configure_desktop() {
     [[ "$(gsettings get org.gnome.desktop.interface gtk-enable-primary-paste 2>/dev/null)" != "true" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.desktop.wm.preferences button-layout 2>/dev/null)" != "'appmenu:minimize,maximize,close'" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.shell.keybindings show-screenshot-ui 2>/dev/null)" != "['<Shift><Super>s']" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings switch-applications 2>/dev/null)" != "@as []" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings switch-applications-backward 2>/dev/null)" != "@as []" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings switch-windows 2>/dev/null)" != "['<Alt>Tab']" ]] && needs_update=true
+    [[ "$(gsettings get org.gnome.desktop.wm.keybindings switch-windows-backward 2>/dev/null)" != "['<Shift><Alt>Tab']" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.desktop.wm.keybindings toggle-maximized 2>/dev/null)" != "['<Alt>Return']" ]] && needs_update=true
     [[ "$(gsettings get org.gnome.desktop.wm.keybindings close 2>/dev/null)" != "['<Super>q']" ]] && needs_update=true
 
@@ -74,6 +78,10 @@ setup_configure_desktop() {
         gsettings set org.gnome.desktop.interface gtk-enable-primary-paste true || print_error "Failed to enable primary paste"
         gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' || print_error "Failed to enable window buttons"
         gsettings set org.gnome.shell.keybindings show-screenshot-ui "['<Shift><Super>s']" || print_error "Failed to configure screenshot shortcut"
+        gsettings set org.gnome.desktop.wm.keybindings switch-applications "[]" || print_error "Failed to disable app-based Alt+Tab"
+        gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "[]" || print_error "Failed to disable reverse app-based Alt+Tab"
+        gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']" || print_error "Failed to configure window-based Alt+Tab"
+        gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward "['<Shift><Alt>Tab']" || print_error "Failed to configure reverse window-based Alt+Tab"
         gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['<Alt>Return']" || print_error "Failed to configure maximize shortcut"
         gsettings set org.gnome.desktop.wm.keybindings close "['<Super>q']" || print_error "Failed to configure close window shortcut"
 
