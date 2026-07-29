@@ -1,4 +1,66 @@
 #!/bin/bash
+
+_configure_copyq_autostart() {
+    local autostart_dir="$HOME/.config/autostart"
+    local desktop_dst="$autostart_dir/copyq.desktop"
+
+    if [[ -f "$desktop_dst" ]] && grep -q "X-GNOME-Autostart-enabled=true" "$desktop_dst" 2>/dev/null; then
+        print_skip "CopyQ autostart desktop entry"
+        return 0
+    fi
+
+    print_info "Configuring CopyQ autostart desktop entry..."
+    mkdir -p "$autostart_dir"
+    cat <<EOF > "$desktop_dst"
+[Desktop Entry]
+Name=CopyQ
+GenericName=Clipboard Manager
+Comment=Start CopyQ clipboard manager
+Exec=copyq
+Icon=copyq
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
+EOF
+    print_success "CopyQ autostart desktop entry created."
+}
+
+_configure_copyq_shortcut() {
+    local keybinding_path="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/copyq/"
+    local current_bindings
+    current_bindings=$(gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings)
+
+    # Unbind GNOME's default Super+V (notification list) so CopyQ can use it
+    if [[ "$(gsettings get org.gnome.shell.keybindings toggle-message-tray 2>/dev/null)" == *"<Super>v"* ]]; then
+        gsettings set org.gnome.shell.keybindings toggle-message-tray "[]" || print_error "Failed to unbind Super+V from notification list"
+    fi
+
+    if [[ "$current_bindings" == *"$keybinding_path"* ]] && \
+       [[ "$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" name)" == "'CopyQ Toggle'" ]] && \
+       [[ "$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" command)" == "'copyq toggle'" ]] && \
+       [[ "$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" binding)" == "'<Super>v'" ]]; then
+        print_skip "CopyQ keyboard shortcut"
+        return
+    fi
+
+    print_info "Configuring CopyQ keyboard shortcut..."
+
+    if [[ "$current_bindings" != *"$keybinding_path"* ]]; then
+        if [[ "$current_bindings" == *"@"* ]] || [[ "$current_bindings" == "[]" ]]; then
+            new_bindings="['$keybinding_path']"
+        else
+            new_bindings="${current_bindings%]*}, '$keybinding_path']"
+        fi
+        gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "$new_bindings"
+    fi
+
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" name 'CopyQ Toggle'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" command 'copyq toggle'
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$keybinding_path" binding '<Super>v'
+
+    print_success "CopyQ keyboard shortcut configured."
+}
+
 _install_dash_to_dock() {
     if rpm -q gnome-shell-extension-dash-to-dock >/dev/null 2>&1; then
         print_skip "Dash to Dock extension"
@@ -87,6 +149,9 @@ setup_configure_desktop() {
 
         print_success "GNOME desktop preferences configured."
     fi
+
+    _configure_copyq_shortcut
+    _configure_copyq_autostart
 
     if _install_dash_to_dock; then
         _configure_dash_to_dock

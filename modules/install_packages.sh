@@ -2,7 +2,9 @@
 
 setup_install_packages() {
     local PACKAGES=(
+        # Clipboard
         wl-clipboard
+        copyq
         libgda
         libgda-sqlite
         gsound
