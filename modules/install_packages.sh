@@ -15,11 +15,16 @@ setup_install_packages() {
         fcitx5-unikey
         fcitx5-gtk
         fcitx5-qt
+
         # CLIs
         eza
         zoxide
         zsh-syntax-highlighting
         zsh-autosuggestions
+        fd
+
+        # Development
+        clangd
     )
 
     local dnf_conf="/etc/dnf/dnf.conf"
