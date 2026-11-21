@@ -1,4 +1,30 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+_configure_ghostty_shortcut() {
+    if ! command -v kwriteconfig6 >/dev/null 2>&1; then
+        print_skip "Ghostty keyboard shortcut (kwriteconfig6 not found)"
+        return 0
+    fi
+
+    local desktop_app="com.mitchellh.ghostty.desktop"
+    if [[ ! -f "/usr/share/applications/$desktop_app" ]] && [[ -f "/usr/share/applications/ghostty.desktop" ]]; then
+        desktop_app="ghostty.desktop"
+    fi
+
+    local current_shortcut
+    current_shortcut=$(kreadconfig6 --file kglobalshortcutsrc --group "$desktop_app" --key _launch 2>/dev/null || true)
+
+    if [[ "$current_shortcut" == *"Meta+Return"* ]]; then
+        print_skip "Ghostty keyboard shortcut"
+        return 0
+    fi
+
+    print_info "Configuring Ghostty keyboard shortcut..."
+    kwriteconfig6 --file kglobalshortcutsrc --group "$desktop_app" --key _launch "Meta+Return,none,Ghostty"
+    qdbus6 org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel.reloadConfig >/dev/null 2>&1 || true
+
+    print_success "Ghostty keyboard shortcut configured."
+}
 
 _install_ghostty() {
     if command -v ghostty >/dev/null 2>&1; then
@@ -12,30 +38,7 @@ _install_ghostty() {
         print_success "Ghostty installed."
     fi
 
-    KEYBINDING_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/ghostty/"
-    CURRENT_BINDINGS=$(gsettings get org.gnome.settings-daemon.plugins.media-keys custom-keybindings)
-
-    if [[ "$CURRENT_BINDINGS" == *"$KEYBINDING_PATH"* ]] && \
-       [ "$(gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$KEYBINDING_PATH" binding)" == "'<Super>Return'" ]; then
-        print_skip "Ghostty keyboard shortcut"
-    else
-        print_info "Configuring Ghostty keyboard shortcut..."
-        
-        if [[ "$CURRENT_BINDINGS" != *"$KEYBINDING_PATH"* ]]; then
-            if [[ "$CURRENT_BINDINGS" == *"@"* ]] || [[ "$CURRENT_BINDINGS" == "[]" ]]; then
-                NEW_BINDINGS="['$KEYBINDING_PATH']"
-            else
-                NEW_BINDINGS="${CURRENT_BINDINGS%]*}, '$KEYBINDING_PATH']"
-            fi
-            gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "$NEW_BINDINGS"
-        fi
-
-        gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$KEYBINDING_PATH" name 'Ghostty'
-        gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$KEYBINDING_PATH" command 'ghostty'
-        gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:"$KEYBINDING_PATH" binding '<Super>Return'
-
-        print_success "Ghostty keyboard shortcut configured."
-    fi
+    _configure_ghostty_shortcut
 }
 
 _set_default_shell_zsh() {

@@ -10,12 +10,6 @@ setup_install_packages() {
         gsound
         nvim
 
-        # Input method
-        fcitx5
-        fcitx5-unikey
-        fcitx5-gtk
-        fcitx5-qt
-
         # CLIs
         eza
         zoxide
@@ -34,7 +28,7 @@ setup_install_packages() {
         "defaultyes=True"
         "ip_resolve=4"
     )
-    
+
     local needs_update=false
     for opt in "${dnf_opts[@]}"; do
         if ! grep -qxF "$opt" "$dnf_conf"; then
@@ -51,7 +45,7 @@ setup_install_packages() {
             grep -qxF "$opt" "$dnf_conf" || echo "$opt" | sudo tee -a "$dnf_conf" >/dev/null
         done
         print_success "DNF configuration updated"
-        
+
         request_reboot_and_resume "$SCRIPT_DIR/setup.sh"
     fi
 
@@ -69,7 +63,5 @@ setup_install_packages() {
 
     install_dnf "Essentials Packages" "${PACKAGES[@]}"
 
-    install_flatpak "Extension Manager" "com.mattjakeman.ExtensionManager"
     install_flatpak "Super Productivity" "com.super_productivity.SuperProductivity"
-    install_flatpak "Actual Budget" "com.actualbudget.actual"
 }

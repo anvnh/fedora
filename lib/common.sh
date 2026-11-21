@@ -41,13 +41,23 @@ request_reboot_and_resume() {
     
     local desktop_file="$autostart_dir/resume-setup-fedora.desktop"
     
+    local term_cmd
+    if command -v ghostty >/dev/null 2>&1; then
+        term_cmd="ghostty -e"
+    elif command -v konsole >/dev/null 2>&1; then
+        term_cmd="konsole -e"
+    elif command -v ptyxis >/dev/null 2>&1; then
+        term_cmd="ptyxis --"
+    else
+        term_cmd="xterm -e"
+    fi
+
     cat <<EOF > "$desktop_file"
 [Desktop Entry]
 Type=Application
 Name=Resume Fedora Setup
-Exec=ptyxis -- bash -c '"$1"; exec "\$SHELL"' _ "$script_path"
+Exec=$term_cmd bash -c '"$1"; exec "\$SHELL"' _ "$script_path"
 Hidden=false
-X-GNOME-Autostart-enabled=true
 EOF
 
     print_warning "Rebooting in 5 seconds... Press Ctrl+C to abort."

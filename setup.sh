@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Get the directory of the current script
@@ -17,6 +17,7 @@ fi
 
 # Run modules
 for file in "$SCRIPT_DIR/modules/"*.sh; do
+    # shellcheck source=/dev/null
     [[ -f "$file" ]] && source "$file"
 done
 
@@ -25,7 +26,5 @@ setup_fonts
 setup_git
 setup_configure_desktop
 setup_cli
-setup_fcitx5
-setup_ide
 
 print_success "All setup modules completed successfully."
