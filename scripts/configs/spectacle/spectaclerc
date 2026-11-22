@@ -1,0 +1,12 @@
+[General]
+rememberSelectionRect=Never
+showMagnifier=ShowMagnifierNever
+
+[GuiConfig]
+quitAfterSaveCopyExport=true
+
+[ImageSave]
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+translatedScreencastsFolder=Screencasts

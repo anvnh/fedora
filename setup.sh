@@ -27,4 +27,6 @@ setup_git
 setup_configure_desktop
 setup_cli
 
+configure_spectacle
+
 print_success "All setup modules completed successfully."
