@@ -42,6 +42,13 @@ precmd_functions+=(_fix_cursor)
 bindkey -M viins '^?' backward-delete-char
 bindkey -M viins '^H' backward-delete-char
 
+bindkey -M viins '^P' up-line-or-history
+bindkey -M viins '^N' down-line-or-history
+bindkey -M vicmd '^P' up-line-or-history
+bindkey -M vicmd '^N' down-line-or-history
+bindkey -M viins '^E' autosuggest-accept
+bindkey -M vicmd '^E' autosuggest-accept
+
 # ================= Aliases ================= #
 # System
 alias sn="shutdown now"

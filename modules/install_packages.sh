@@ -18,8 +18,17 @@ setup_install_packages() {
         fd
         nftables
 
-        # Development
+        # Development & Build Tools
         clangd
+        make
+        gcc
+        pkgconf-pkg-config
+        zlib-ng-compat-devel
+        libcap-devel
+        libnetfilter_queue-devel
+        libmnl-devel
+        systemd-devel
+        luajit-devel
 
         # OCR
         tesseract
