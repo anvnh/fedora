@@ -16,6 +16,7 @@ setup_install_packages() {
         zsh-syntax-highlighting
         zsh-autosuggestions
         fd
+        nftables
 
         # Development
         clangd

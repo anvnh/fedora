@@ -1,3 +1,4 @@
+# shellcheck disable=all
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -22,6 +23,24 @@ setopt HIST_IGNORE_DUPS       # Do not record duplicate commands right after eac
 setopt HIST_IGNORE_ALL_DUPS   # Remove old duplicate entries if a new one is saved
 setopt HIST_IGNORE_SPACE      # Do not record commands that start with a space
 setopt SHARE_HISTORY          # Share history across all active zsh sessions
+
+# Vim mode
+bindkey -v
+export KEYTIMEOUT=1
+function zle-keymap-select {
+  if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
+    echo -ne '\e[2 q'
+  elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] || [[ $1 = 'beam' ]]; then
+    echo -ne '\e[5 q'
+  fi
+}
+zle -N zle-keymap-select
+_fix_cursor() {
+   echo -ne '\e[5 q'
+}
+precmd_functions+=(_fix_cursor)
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^H' backward-delete-char
 
 # ================= Aliases ================= #
 # System
