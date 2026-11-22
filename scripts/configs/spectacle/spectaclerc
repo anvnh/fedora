@@ -1,4 +1,5 @@
 [General]
+ocrLanguages=eng,vie
 rememberSelectionRect=Never
 showMagnifier=ShowMagnifierNever
 

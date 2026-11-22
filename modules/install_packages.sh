@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 setup_install_packages() {
     local PACKAGES=(
@@ -19,6 +19,11 @@ setup_install_packages() {
 
         # Development
         clangd
+
+        # OCR
+        tesseract
+        tesseract-langpack-vie
+        tesseract-langpack-eng
     )
 
     local dnf_conf="/etc/dnf/dnf.conf"
