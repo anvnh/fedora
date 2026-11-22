@@ -4,6 +4,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Environment
+export PATH="$HOME/.local/bin:$PATH"
+
 # Initialize zoxide
 eval "$(zoxide init zsh)"
 
@@ -60,6 +63,9 @@ alias cd="z"
 alias ..="cd .."
 alias ...="cd ../.."
 alias \?="pay-respects"
+
+# Editor
+alias zed="$HOME/.local/bin/zed"
 
 # Git
 alias glg="git log --oneline --graph --all --decorate"
