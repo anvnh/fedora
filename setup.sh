@@ -23,6 +23,7 @@ done
 
 setup_install_packages
 setup_gpu
+setup_battery
 setup_fonts
 setup_git
 setup_configure_desktop
