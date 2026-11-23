@@ -19,6 +19,7 @@ setup_install_packages() {
         nftables
 
         tuned-switcher
+        easyeffects
 
         # Development & Build Tools
         gh
