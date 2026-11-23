@@ -18,7 +18,10 @@ setup_install_packages() {
         fd
         nftables
 
+        tuned-switcher
+
         # Development & Build Tools
+        gh
         clangd
         make
         gcc

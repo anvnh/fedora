@@ -22,6 +22,7 @@ for file in "$SCRIPT_DIR/modules/"*.sh; do
 done
 
 setup_install_packages
+setup_gpu
 setup_fonts
 setup_git
 setup_configure_desktop
