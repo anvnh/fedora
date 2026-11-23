@@ -21,6 +21,8 @@ setup_install_packages() {
         tuned-switcher
         easyeffects
 
+        noctalia
+
         # Development & Build Tools
         gh
         clangd
@@ -64,8 +66,6 @@ setup_install_packages() {
             grep -qxF "$opt" "$dnf_conf" || echo "$opt" | sudo tee -a "$dnf_conf" >/dev/null
         done
         print_success "DNF configuration updated"
-
-        request_reboot_and_resume "$SCRIPT_DIR/setup.sh"
     fi
 
     if fedora-third-party query | grep -q 'enabled'; then
