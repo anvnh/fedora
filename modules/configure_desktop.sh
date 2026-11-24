@@ -84,82 +84,6 @@ _configure_window_shortcuts() {
     print_success "Window shortcuts configured."
 }
 
-_register_noctalia_shortcut() {
-    local panel="$1" name="$2" key="$3" assigned
-    local -a action_id=(4 "noctalia-$panel.desktop" _launch "$name" "$name")
-
-    _kglobalaccel doRegister as "${action_id[@]}" || return 1
-    # SetPresent (2) activates the shortcut. NoAutoloading (4) applies the new key.
-    assigned=$(_kglobalaccel setShortcutKeys 'asa(ai)u' "${action_id[@]}" 1 4 "$key" 0 0 0 6) || return 1
-    if [[ "$assigned" != "a(ai) 1 4 $key 0 0 0" ]]; then
-        print_error "KDE could not assign the shortcut for $name."
-        return 1
-    fi
-}
-
-_configure_noctalia_shortcuts() {
-    if ! command -v noctalia >/dev/null 2>&1; then
-        print_skip "Noctalia shortcuts (noctalia not found)"
-        return 0
-    fi
-
-    local shortcuts_dir="${XDG_DATA_HOME:-$HOME/.local/share}/kglobalaccel"
-    local autostart_dir="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
-    local alt_space=134217760 meta_v=268435542
-
-    print_info "Configuring Noctalia keyboard shortcuts (Alt+Space: launcher, Super+V: clipboard)..."
-    mkdir -p "$shortcuts_dir" "$autostart_dir"
-
-    # KGlobalAccel can register entries from this directory immediately on a fresh profile.
-    cat << 'EOF' > "$shortcuts_dir/noctalia-launcher.desktop"
-[Desktop Entry]
-Categories=Utility;
-Comment=Toggle Noctalia application launcher
-Exec=noctalia msg panel-toggle launcher
-Icon=noctalia
-Name=Noctalia Launcher
-NoDisplay=true
-StartupNotify=false
-Type=Application
-X-KDE-GlobalAccel-CommandShortcut=true
-EOF
-
-    cat << 'EOF' > "$shortcuts_dir/noctalia-clipboard.desktop"
-[Desktop Entry]
-Categories=Utility;
-Comment=Toggle Noctalia clipboard history
-Exec=noctalia msg panel-toggle clipboard
-Icon=noctalia
-Name=Noctalia Clipboard
-NoDisplay=true
-StartupNotify=false
-Type=Application
-X-KDE-GlobalAccel-CommandShortcut=true
-EOF
-
-    _remove_kde_shortcut_key org.kde.krunner.desktop _launch "$alt_space"
-    _remove_kde_shortcut_key plasmashell show-on-mouse-pos "$meta_v"
-    _register_noctalia_shortcut launcher "Noctalia Launcher" "$alt_space"
-    _register_noctalia_shortcut clipboard "Noctalia Clipboard" "$meta_v"
-
-    local autostart_file="$autostart_dir/dev.noctalia.Noctalia.desktop"
-    if [[ ! -e "$autostart_file" ]]; then
-        cat << 'EOF' > "$autostart_file"
-[Desktop Entry]
-Type=Application
-Name=Noctalia
-Exec=noctalia --daemon
-OnlyShowIn=KDE;
-EOF
-    fi
-
-    if ! noctalia msg status >/dev/null 2>&1; then
-        noctalia --daemon
-    fi
-
-    print_success "Noctalia shortcuts configured."
-}
-
 _configure_cursor() {
     local theme_name="catppuccin-mocha-dark-cursors"
     local icons_dir="$HOME/.local/share/icons"
@@ -209,6 +133,5 @@ setup_configure_desktop() {
 
     _configure_caps_lock
     _configure_window_shortcuts
-    _configure_noctalia_shortcuts
     _configure_cursor
 }

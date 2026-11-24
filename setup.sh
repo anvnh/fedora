@@ -27,6 +27,7 @@ setup_battery
 setup_fonts
 setup_git
 setup_configure_desktop
+setup_noctalia
 setup_cli
 
 configure_spectacle

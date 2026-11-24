@@ -1,0 +1,114 @@
+[bar.default]
+end = [
+    "media",
+    "tray",
+    "notifications",
+    "network",
+    "bluetooth",
+    "volume",
+    "brightness",
+    "battery",
+    "control-center",
+    "session"
+]
+margin_ends = 0
+padding = 13
+radius = 0
+radius_top_left = 0
+radius_top_right = 0
+start = [ "launcher", "wallpaper", "workspaces", "clipboard" ]
+thickness = 27
+
+[battery.device."/org/freedesktop/UPower/devices/mouse_hidpp_battery_0"]
+warning_threshold = 21
+
+[calendar]
+
+[control_center]
+sidebar = "full"
+sidebar_section = "full"
+width = 1010
+
+    [control_center.calendar]
+    show_week_numbers = true
+
+[desktop_widgets]
+enabled = false
+
+[dock]
+auto_hide = true
+auto_hide_reveal_delay_ms = 200
+background_opacity = 0.99999997764825821
+cross_axis_padding = 5
+enabled = true
+icon_size = 40
+magnification_scale = 1.3500000052154064
+main_axis_padding = 21
+reserve_space = false
+show_dots = true
+
+[keybinds]
+down = [ "Down", "Ctrl+n" ]
+left = [ "Left", "Ctrl+h" ]
+right = [ "Right", "Ctrl+l" ]
+up = [ "Up", "Ctrl+p" ]
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 960.0
+    cy = 898.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_container"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_media_controls = true
+        show_password_reveal = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[osd]
+enabled = false
+
+[shell]
+corner_radius_scale = 0.95000001415610313
+
+[theme]
+builtin = "Nord"
+
+    [theme.templates]
+    builtin_ids = [ "ghostty" ]
+
+[wallpaper]
+directory = "/home/anvnhi/Pictures/Wallpapers"
+
+    [wallpaper.default]
+    path = "/home/anvnhi/Pictures/Wallpapers/road-mountains-tarmac-sunrise-morning-macos-big-sur-stock-5k-6016x6016-3996.jpg"
+
+    [wallpaper.last]
+    path = "/home/anvnhi/Pictures/Wallpapers/road-mountains-tarmac-sunrise-morning-macos-big-sur-stock-5k-6016x6016-3996.jpg"
