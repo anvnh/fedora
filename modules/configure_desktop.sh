@@ -27,30 +27,6 @@ _configure_caps_lock() {
     print_success "Caps Lock mapped to Ctrl."
 }
 
-_configure_window_shortcuts() {
-    local current_close current_maximize
-    current_close=$(kreadconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" 2>/dev/null || true)
-    current_maximize=$(kreadconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" 2>/dev/null || true)
-
-    local needs_update=false
-    [[ "$current_close" != *"Meta+Q"* ]] && needs_update=true
-    [[ "$current_maximize" != *"Alt+Return"* ]] && needs_update=true
-
-    if [[ "$needs_update" == false ]]; then
-        print_skip "Window shortcuts (Super+Q to close, Alt+Return to maximize)"
-        return 0
-    fi
-
-    print_info "Configuring KDE window shortcuts..."
-    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Q,Alt+F4,Close Window"
-    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Alt+Return,Meta+PgUp,Maximize Window"
-
-    _qdbus org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
-    _qdbus org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel.reloadConfig >/dev/null 2>&1 || true
-
-    print_success "Window shortcuts configured."
-}
-
 _kglobalaccel() {
     busctl --user call org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel "$@"
 }
@@ -76,6 +52,36 @@ _remove_kde_shortcut_key() {
     if [[ "$count" != "${sequences[1]}" ]]; then
         _kglobalaccel setForeignShortcutKeys 'asa(ai)' "${action_id[@]}" "$count" "${kept[@]}"
     fi
+}
+
+_configure_window_shortcuts() {
+    local current_close current_maximize current_show_desktop
+    current_close=$(kreadconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" 2>/dev/null || true)
+    current_maximize=$(kreadconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" 2>/dev/null || true)
+    current_show_desktop=$(kreadconfig6 --file kglobalshortcutsrc --group kwin --key "Show Desktop" 2>/dev/null || true)
+
+    local needs_update=false
+    [[ "$current_close" != *"Meta+Q"* ]] && needs_update=true
+    [[ "$current_maximize" != *"Alt+Return"* ]] && needs_update=true
+    [[ "$current_show_desktop" != "none"* ]] && needs_update=true
+
+    if [[ "$needs_update" == false ]]; then
+        print_skip "Window shortcuts (Super+Q close, Alt+Return maximize, unbind Super+D)"
+        return 0
+    fi
+
+    print_info "Configuring KDE window shortcuts (Super+Q close, Alt+Return maximize, unbind Super+D)..."
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Close" "Meta+Q,Alt+F4,Close Window"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Window Maximize" "Alt+Return,Meta+PgUp,Maximize Window"
+    kwriteconfig6 --file kglobalshortcutsrc --group kwin --key "Show Desktop" "none,none,Peek at Desktop"
+
+    local meta_d=268435524
+    _remove_kde_shortcut_key kwin "Show Desktop" "$meta_d" || true
+
+    _qdbus org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+    _qdbus org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel.reloadConfig >/dev/null 2>&1 || true
+
+    print_success "Window shortcuts configured."
 }
 
 _register_noctalia_shortcut() {
