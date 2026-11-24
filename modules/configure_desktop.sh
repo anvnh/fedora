@@ -84,6 +84,43 @@ _configure_window_shortcuts() {
     print_success "Window shortcuts configured."
 }
 
+_add_kde_shortcut_key() {
+    local component="$1" action="$2" key="$3"
+    local -a action_id=(4 "$component" "$action" "" "")
+    local current
+    local -a sequences
+    # Each D-Bus key sequence contains four Qt key codes, padded with zeroes.
+    local sequence=" 4 $key 0 0 0 "
+
+    current=$(_kglobalaccel shortcutKeys as "${action_id[@]}") || return 1
+    if [[ " $current " == *"$sequence"* ]]; then
+        return 0
+    fi
+
+    read -r -a sequences <<< "$current"
+    _kglobalaccel setForeignShortcutKeys 'asa(ai)' "${action_id[@]}" \
+        "$((sequences[1] + 1))" "${sequences[@]:2}" 4 "$key" 0 0 0 || return 1
+
+    current=$(_kglobalaccel shortcutKeys as "${action_id[@]}") || return 1
+    if [[ " $current " != *"$sequence"* ]]; then
+        print_error "KDE could not assign the shortcut for $action."
+        return 1
+    fi
+}
+
+_configure_virtual_desktop_shortcuts() {
+    local qt_alt=0x08000000 qt_ctrl=0x04000000 qt_shift=0x02000000
+    local qt_h=0x48 qt_l=0x4c
+    local move_modifiers=$((qt_alt | qt_ctrl | qt_shift))
+
+    print_info "Configuring virtual desktop shortcuts (Alt+H/L switch, Ctrl+Alt+Shift+H/L move window)..."
+    _add_kde_shortcut_key kwin "Switch to Next Desktop" "$((qt_alt | qt_l))" || return 1
+    _add_kde_shortcut_key kwin "Switch to Previous Desktop" "$((qt_alt | qt_h))" || return 1
+    _add_kde_shortcut_key kwin "Window One Desktop to the Right" "$((move_modifiers | qt_l))" || return 1
+    _add_kde_shortcut_key kwin "Window One Desktop to the Left" "$((move_modifiers | qt_h))" || return 1
+    print_success "Virtual desktop shortcuts configured."
+}
+
 _configure_cursor() {
     local theme_name="catppuccin-mocha-dark-cursors"
     local icons_dir="$HOME/.local/share/icons"
@@ -133,5 +170,6 @@ setup_configure_desktop() {
 
     _configure_caps_lock
     _configure_window_shortcuts
+    _configure_virtual_desktop_shortcuts
     _configure_cursor
 }
