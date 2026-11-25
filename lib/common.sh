@@ -57,6 +57,16 @@ check_environment() {
         return 1
     fi
 
+    local required_commands=(sudo dnf rpm busctl)
+    local cmd
+
+    for cmd in "${required_commands[@]}"; do
+        if ! command -v "$cmd" >/dev/null 2>&1; then
+            print_error "Required command not found: $cmd"
+            return 1
+        fi
+    done
+
     if ! busctl --user status org.kde.KWin >/dev/null 2>&1; then
         print_error "KWin is not available in the current session."
         return 1
