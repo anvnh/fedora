@@ -38,6 +38,7 @@ _install_ghostty() {
         print_success "Ghostty installed."
     fi
 
+    link_config "Ghostty" "$SCRIPT_DIR/configs/ghostty/config.ghostty" "$HOME/.config/ghostty/config.ghostty"
     _configure_ghostty_shortcut
 }
 
