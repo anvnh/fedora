@@ -108,6 +108,50 @@ _add_kde_shortcut_key() {
     fi
 }
 
+_configure_virtual_desktops() {
+    local target_count=3
+    local -a vdm=(org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager)
+    local count_prop rows_prop wrap_prop
+    local count rows wrap
+
+    count_prop=$(busctl --user get-property "${vdm[@]}" count) || return 1
+    rows_prop=$(busctl --user get-property "${vdm[@]}" rows) || return 1
+    wrap_prop=$(busctl --user get-property "${vdm[@]}" navigationWrappingAround) || return 1
+
+    count=${count_prop#u }
+    rows=${rows_prop#u }
+    wrap=${wrap_prop#b }
+
+    if (( count >= target_count )) && [[ "$rows" == "1" && "$wrap" == "false" ]]; then
+        print_skip "Virtual desktops (${count} desktops, 1 row, wrap-around disabled)"
+        return 0
+    fi
+
+    print_info "Configuring virtual desktops (minimum ${target_count}, 1 row, wrap-around disabled)..."
+    while (( count < target_count )); do
+        busctl --user call "${vdm[@]}" createDesktop us "$count" "Desktop $((count + 1))" || return 1
+        count=$((count + 1))
+    done
+
+    if [[ "$rows" != "1" ]]; then
+        busctl --user set-property "${vdm[@]}" rows u 1 || return 1
+    fi
+
+    if [[ "$wrap" != "false" ]]; then
+        busctl --user set-property "${vdm[@]}" navigationWrappingAround b false || return 1
+    fi
+
+    count_prop=$(busctl --user get-property "${vdm[@]}" count) || return 1
+    rows_prop=$(busctl --user get-property "${vdm[@]}" rows) || return 1
+    wrap_prop=$(busctl --user get-property "${vdm[@]}" navigationWrappingAround) || return 1
+    if (( ${count_prop#u } < target_count )) || [[ "${rows_prop#u }" != "1" || "${wrap_prop#b }" != "false" ]]; then
+        print_error "KWin virtual desktop configuration did not match expected state."
+        return 1
+    fi
+
+    print_success "Virtual desktops configured (${count_prop#u } desktops)."
+}
+
 _configure_virtual_desktop_shortcuts() {
     local qt_meta=0x10000000 qt_alt=0x08000000 qt_ctrl=0x04000000 qt_shift=0x02000000
     local qt_1=0x31 qt_2=0x32 qt_h=0x48 qt_l=0x4c
@@ -176,6 +220,7 @@ setup_configure_desktop() {
 
     _configure_caps_lock
     _configure_window_shortcuts
+    _configure_virtual_desktops
     _configure_virtual_desktop_shortcuts
     _configure_cursor
 }
