@@ -109,13 +109,19 @@ _add_kde_shortcut_key() {
 }
 
 _configure_virtual_desktop_shortcuts() {
-    local qt_alt=0x08000000 qt_ctrl=0x04000000 qt_shift=0x02000000
-    local qt_h=0x48 qt_l=0x4c
+    local qt_meta=0x10000000 qt_alt=0x08000000 qt_ctrl=0x04000000 qt_shift=0x02000000
+    local qt_1=0x31 qt_2=0x32 qt_h=0x48 qt_l=0x4c
     local move_modifiers=$((qt_alt | qt_ctrl | qt_shift))
 
-    print_info "Configuring virtual desktop shortcuts (Alt+H/L switch, Ctrl+Alt+Shift+H/L move window)..."
-    _add_kde_shortcut_key kwin "Switch to Next Desktop" "$((qt_alt | qt_l))" || return 1
-    _add_kde_shortcut_key kwin "Switch to Previous Desktop" "$((qt_alt | qt_h))" || return 1
+    print_info "Configuring virtual desktop shortcuts (Super+H/L and Super+1/2 switch, Ctrl+Alt+Shift+H/L move window)..."
+    _remove_kde_shortcut_key plasmashell "activate task manager entry 1" "$((qt_meta | qt_1))" || return 1
+    _remove_kde_shortcut_key plasmashell "activate task manager entry 2" "$((qt_meta | qt_2))" || return 1
+    _add_kde_shortcut_key kwin "Switch to Next Desktop" "$((qt_meta | qt_l))" || return 1
+    _add_kde_shortcut_key kwin "Switch to Next Desktop" "$((qt_meta | qt_2))" || return 1
+    _add_kde_shortcut_key kwin "Switch to Previous Desktop" "$((qt_meta | qt_h))" || return 1
+    _add_kde_shortcut_key kwin "Switch to Previous Desktop" "$((qt_meta | qt_1))" || return 1
+    _remove_kde_shortcut_key kwin "Switch to Next Desktop" "$((qt_alt | qt_l))" || return 1
+    _remove_kde_shortcut_key kwin "Switch to Previous Desktop" "$((qt_alt | qt_h))" || return 1
     _add_kde_shortcut_key kwin "Window One Desktop to the Right" "$((move_modifiers | qt_l))" || return 1
     _add_kde_shortcut_key kwin "Window One Desktop to the Left" "$((move_modifiers | qt_h))" || return 1
     print_success "Virtual desktop shortcuts configured."
