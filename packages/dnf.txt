@@ -1,0 +1,38 @@
+# Desktop, Clipboard & Audio
+wl-clipboard
+copyq
+libgda
+libgda-sqlite
+gsound
+tuned-switcher
+easyeffects
+noctalia
+
+# Editor & CLIs
+nvim
+eza
+zoxide
+zsh-syntax-highlighting
+zsh-autosuggestions
+fd
+
+# Networking
+nftables
+
+# Development & Build Tools
+gh
+clangd
+make
+gcc
+pkgconf-pkg-config
+zlib-ng-compat-devel
+libcap-devel
+libnetfilter_queue-devel
+libmnl-devel
+systemd-devel
+luajit-devel
+
+# OCR
+tesseract
+tesseract-langpack-vie
+tesseract-langpack-eng

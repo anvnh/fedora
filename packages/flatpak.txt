@@ -1,0 +1,2 @@
+# Format: <app_id> | <display_name>
+com.super_productivity.SuperProductivity | Super Productivity
