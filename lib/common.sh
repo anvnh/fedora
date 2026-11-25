@@ -112,5 +112,5 @@ EOF
 
     print_warning "Rebooting in 5 seconds... Press Ctrl+C to abort."
     sleep 5
-    sudo systemctl reboot -i
+    sudo systemctl reboot --check-inhibitors=yes
 }

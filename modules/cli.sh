@@ -44,17 +44,27 @@ _install_ghostty() {
 
 _set_default_shell_zsh() {
     local zsh_path
-    zsh_path=$(command -v zsh)
+    local current_shell
+    local username
 
-    if [[ "$SHELL" == "$zsh_path" ]]; then
+    username=$(id -un)
+    zsh_path=$(command -v zsh) || return 1
+    current_shell=$(getent passwd "$username" | cut -d: -f7)
+
+    if [[ "$current_shell" == "$zsh_path" ]]; then
         print_skip "Default shell (zsh)"
-        return
+        return 0
     fi
 
     print_info "Setting zsh as default shell..."
-    chsh -s "$zsh_path" "$USER"
-    print_success "Default shell set to zsh"
-    request_reboot_and_resume "$SCRIPT_DIR/setup.sh"
+
+    if ! chsh -s "$zsh_path" "$username"; then
+        print_error "Failed to change the default shell."
+        return 1
+    fi
+
+    print_success "Default shell set to zsh."
+    print_info "Log out and log back in to apply the change."
 }
 
 _install_powerlevel10k() {
@@ -79,7 +89,7 @@ _install_zsh() {
 
 setup_cli() {
     _install_ghostty
-    
+
     install_dnf "tmux" tmux
     link_config "tmux" "$SCRIPT_DIR/configs/.tmux.conf" "$HOME/.config/tmux/tmux.conf"
 
