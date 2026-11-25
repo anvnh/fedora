@@ -8,6 +8,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 source "$SCRIPT_DIR/lib/install.sh"
 
+case "${1:-}" in
+--check)
+    check_environment
+    exit 0
+    ;;
+"")
+    ;;
+*)
+    print_error "Unknown argument: $1"
+    exit 1
+    ;;
+esac
+
 check_environment
 
 # Auto-resume cleanup
