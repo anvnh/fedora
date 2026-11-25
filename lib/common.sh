@@ -30,17 +30,57 @@ print_skip() {
     echo -e "${color}[SKIP]${NC} $1"
 }
 
+check_environment() {
+    if ((EUID == 0)); then
+        print_error "Run this script as a regular user, not root."
+        return 1
+    fi
+
+    if [[ ! -r /etc/os-release ]]; then
+        print_error "Unable to identify the operating system."
+        return 1
+    fi
+
+    local os_id
+    os_id=$(
+        source /etc/os-release
+        printf '%s' "${ID:-unknown}"
+    )
+
+    if [[ "$os_id" != "fedora" ]]; then
+        print_error "This project only supports Fedora Linux."
+        return 1
+    fi
+
+    if [[ ":${XDG_CURRENT_DESKTOP:-}:" != *":KDE:"* ]]; then
+        print_error "This project requires a KDE Plasma session."
+        return 1
+    fi
+
+    if ! busctl --user status org.kde.KWin >/dev/null 2>&1; then
+        print_error "KWin is not available in the current session."
+        return 1
+    fi
+
+    if ! sudo -v; then
+        print_error "Unable to obtain sudo privileges."
+        return 1
+    fi
+
+    print_success "Environment checks passed."
+}
+
 request_reboot_and_resume() {
     local script_path="$1"
-    
+
     print_warning "System requires a reboot to continue."
     print_info "Setting up auto-resume mechanism..."
-    
+
     local autostart_dir="$HOME/.config/autostart"
     mkdir -p "$autostart_dir"
-    
+
     local desktop_file="$autostart_dir/resume-setup-fedora.desktop"
-    
+
     local term_cmd
     if command -v ghostty >/dev/null 2>&1; then
         term_cmd="ghostty -e"
@@ -52,7 +92,7 @@ request_reboot_and_resume() {
         term_cmd="xterm -e"
     fi
 
-    cat <<EOF > "$desktop_file"
+    cat <<EOF >"$desktop_file"
 [Desktop Entry]
 Type=Application
 Name=Resume Fedora Setup

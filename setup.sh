@@ -8,6 +8,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 source "$SCRIPT_DIR/lib/install.sh"
 
+check_environment
+
 # Auto-resume cleanup
 AUTOSTART_FILE="$HOME/.config/autostart/resume-setup-fedora.desktop"
 if [[ -f "$AUTOSTART_FILE" ]]; then
