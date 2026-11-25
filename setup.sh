@@ -23,13 +23,6 @@ esac
 
 check_environment
 
-# Auto-resume cleanup
-AUTOSTART_FILE="$HOME/.config/autostart/resume-setup-fedora.desktop"
-if [[ -f "$AUTOSTART_FILE" ]]; then
-    print_info "Resuming setup after reboot..."
-    rm -f "$AUTOSTART_FILE"
-fi
-
 # Run modules
 for file in "$SCRIPT_DIR/modules/"*.sh; do
     # shellcheck source=/dev/null

@@ -79,38 +79,3 @@ check_environment() {
 
     print_success "Environment checks passed."
 }
-
-request_reboot_and_resume() {
-    local script_path="$1"
-
-    print_warning "System requires a reboot to continue."
-    print_info "Setting up auto-resume mechanism..."
-
-    local autostart_dir="$HOME/.config/autostart"
-    mkdir -p "$autostart_dir"
-
-    local desktop_file="$autostart_dir/resume-setup-fedora.desktop"
-
-    local term_cmd
-    if command -v ghostty >/dev/null 2>&1; then
-        term_cmd="ghostty -e"
-    elif command -v konsole >/dev/null 2>&1; then
-        term_cmd="konsole -e"
-    elif command -v ptyxis >/dev/null 2>&1; then
-        term_cmd="ptyxis --"
-    else
-        term_cmd="xterm -e"
-    fi
-
-    cat <<EOF >"$desktop_file"
-[Desktop Entry]
-Type=Application
-Name=Resume Fedora Setup
-Exec=$term_cmd bash -c '"$1"; exec "\$SHELL"' _ "$script_path"
-Hidden=false
-EOF
-
-    print_warning "Rebooting in 5 seconds... Press Ctrl+C to abort."
-    sleep 5
-    sudo systemctl reboot --check-inhibitors=yes
-}
