@@ -3,18 +3,20 @@
 _INSTALL_PACKAGES_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 _configure_dnf() {
-    local dnf_conf="/etc/dnf/dnf.conf"
-    local dnf_opts=(
-        "max_parallel_downloads=10"
-        "fastestmirror=True"
-        "defaultyes=True"
-        "ip_resolve=4"
+    local main_config
+    main_config=$(dnf --dump-main-config) || return 1
+
+    local -a expected_opts=(
+        "max_parallel_downloads = 10"
+        "fastestmirror = 1"
+        "defaultyes = 1"
+        "ip_resolve = ipv4"
     )
 
     local needs_update=false
     local opt
-    for opt in "${dnf_opts[@]}"; do
-        if ! grep -qxF "$opt" "$dnf_conf"; then
+    for opt in "${expected_opts[@]}"; do
+        if ! grep -qxF "$opt" <<< "$main_config"; then
             needs_update=true
             break
         fi
@@ -26,9 +28,11 @@ _configure_dnf() {
     fi
 
     print_info "Maximize DNF download speed and force IPv4 routing..."
-    for opt in "${dnf_opts[@]}"; do
-        grep -qxF "$opt" "$dnf_conf" || echo "$opt" | sudo tee -a "$dnf_conf" >/dev/null
-    done
+    sudo dnf config-manager setopt \
+        max_parallel_downloads=10 \
+        fastestmirror=True \
+        defaultyes=True \
+        ip_resolve=4 || return 1
     print_success "DNF configuration updated"
 }
 
